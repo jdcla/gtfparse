@@ -170,6 +170,13 @@ def parse_gtf(
 
         def extract_attributes(gtf_attr):
             records = re.findall(r"(\S+) \"([^\"]+)\";", gtf_attr)
+            # Ensembl release 79 added values like:
+            #   transcript_support_level "1 (assigned to previous version 5)";
+            # ...which gets mangled by splitting on spaces.
+            if "transcript_support_level" in restrict_attribute_columns:
+                records["transcript_support_level"] = records[
+                    "transcript_support_level"
+                ].split(" ")[0]
             return dict(records)
 
         # Apply the function to each row
