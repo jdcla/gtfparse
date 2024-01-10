@@ -173,7 +173,8 @@ def parse_gtf(
             restrict_attribute_columns = set()
 
         def extract_attributes(gtf_attr):
-            return re.findall(r"(\S+) \"([^\"]+)\";", gtf_attr)
+            records = re.findall(r"(\S+) \"([^\"]+)\";", gtf_attr)
+            return dict(records)
 
         # Apply the function to each row
         annot_df = (
