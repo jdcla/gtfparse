@@ -139,9 +139,12 @@ def parse_gtf(
                 df = polars.read_csv(
                     f, new_columns=REQUIRED_COLUMNS, **kwargs
                 ).lazy()
+
         else:
             df = polars.scan_csv(
-                filepath_or_buffer,
+                filepath_or_buffer
+                if hasattr(filepath_or_buffer, "readline")
+                else open(filepath_or_buffer),
                 with_column_names=lambda cols: REQUIRED_COLUMNS,
                 **kwargs
             ).lazy()
