@@ -83,11 +83,12 @@ def parse_gtf(
     expand_attribute_column=True,
     features=None,
 ):
-    """Parse lines into column->values dictionary and then expand the
-    'attribute' column into multiple columns. This expansion happens by
-    replacing strings of semi-colon separated key-value values in the
-    'attribute' column with one column per distinct key, with a list of values
-    for each row (using None for rows where key didn't occur).
+    """
+    Parse lines into column->values dictionary and then expand the 'attribute'
+    column into multiple columns. This expansion happens by replacing strings
+    of semi-colon separated key-value values in the 'attribute' column with one
+    column per distinct key, with a list of values for each row (using None for
+    rows where key didn't occur).
 
     Parameters
     ----------
@@ -169,15 +170,7 @@ def parse_gtf(
             restrict_attribute_columns = set()
 
         def extract_attributes(gtf_attr):
-            records = re.findall(r"(\S+) \"([^\"]+)\";", gtf_attr)
-            # Ensembl release 79 added values like:
-            #   transcript_support_level "1 (assigned to previous version 5)";
-            # ...which gets mangled by splitting on spaces.
-            if "transcript_support_level" in restrict_attribute_columns:
-                records["transcript_support_level"] = records[
-                    "transcript_support_level"
-                ].split(" ")[0]
-            return dict(records)
+            return re.findall(r"(\S+) \"([^\"]+)\";", gtf_attr)
 
         # Apply the function to each row
         annot_df = (
@@ -209,8 +202,8 @@ def read_gtf(
     features=None,
     result_type="pandas",
 ):
-    """Parse a GTF into a dictionary mapping column names to sequences of
-    values.
+    """
+    Parse a GTF into a dictionary mapping column names to sequences of values.
 
     Parameters
     ----------
